@@ -13,13 +13,27 @@ import {
   View,
   PixelRatio,
   ScrollView,
+  Image,
+  ListView,
   TouchableHighlight
 } from 'react-native';
+
+var Chance = require('chance');
+var chance = new Chance();
 
 const {
   CardStack:NavigationCardStack,
   StateUtils:NavigationStateUtils
 } = NavigationExperimental;
+
+const longList = new Array(100);
+
+for (var i=0;longList.length>i;i++) {
+  longList[i] = {
+    title:chance.word(),
+    paragraph:chance.paragraph()
+  }
+}
 
 class BleedingEdgeApplication extends Component {
   constructor(props,context){
@@ -69,6 +83,13 @@ class TappableRow extends Component {
 }
 
 class MyVeryComplexScene extends Component {
+  constructor(props) {
+    super(props);
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.state = {
+      dataSource: ds.cloneWithRows(longList)
+    };
+  }
   render(){
     return (
       <ScrollView style={styles.scrollView}>
@@ -82,6 +103,18 @@ class MyVeryComplexScene extends Component {
         <TappableRow
           text='Tap me to go back'
           onPress={this.props.onPopRoute}
+        />
+        <Image source={{uri:'https://facebook.github.io/react/img/logo_og.png'}} style={{width:100,height:100}} />
+        <ListView
+          dataSource={this.state.dataSource}
+          renderRow={(rowData) => {
+            return (
+              <View>
+                <Text>{rowData.title}</Text>
+                <Text>{rowData.paragraph}</Text>
+              </View>
+            )
+          }}
         />
       </ScrollView>
     );
@@ -98,10 +131,10 @@ class MyVerySimpleNavigator extends Component {
   _renderScene(sceneProps){
     return (
       <MyVeryComplexScene
-      route={sceneProps.scene.route}
-      onPushRoute={this._onPushRoute}
-      onPopRoute={this._onPopRoute}
-      onExit={this.props.onExit}
+        route={sceneProps.scene.route}
+        onPushRoute={this._onPushRoute}
+        onPopRoute={this._onPopRoute}
+        onExit={this.props.onExit}
       />
     );
   }
