@@ -39,3 +39,13 @@ buck-out/
 \.buckd/
 android/app/libs
 android/keystores/debug.keystore
+
+##########################
+######## FASTLANE ########
+##########################
+*.zip
+fastlane/report.xml
+fastlane/certificates/distribution.p12
+fastlane/local_config.sh
+*.cer
+*.mobileprovision

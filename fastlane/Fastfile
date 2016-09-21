@@ -18,8 +18,8 @@ default_platform :ios
 platform :ios do
   before_all do
     # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
-    
-    
+
+
   end
 
   desc "Runs all the tests"
@@ -27,11 +27,29 @@ platform :ios do
     scan
   end
 
+  lane :provision do
+    # produce(
+    #   app_name: "MeeTwo Beta",
+    #   app_version: "1.0"
+    # )
+    cert
+    sigh(force:true)
+  end
+
   desc "Submit a new Beta Build to Apple TestFlight"
   desc "This will also make sure the profile is up to date"
   lane :beta do
     # match(type: "appstore") # more information: https://codesigning.guide
-    gym # Build your app - more options available
+    increment_build_number(
+      xcodeproj: "./ios/Navigation.xcodeproj"
+    )
+    gym(
+      scheme: "Navigation",
+      project: "./ios/Navigation.xcodeproj",
+      suppress_xcode_output: true,
+      silent: true,
+      clean: true
+    )
     pilot
 
     # sh "your_script.sh"
