@@ -15,25 +15,27 @@ import {
   ScrollView,
   Image,
   ListView,
-  TouchableHighlight
+  TouchableHighlight,
+  InteractionManager
 } from 'react-native';
+
+import App from './experiment.js';
+import SimpleNav from './boring.js';
 
 var Chance = require('chance');
 var chance = new Chance();
+const longList = new Array(10);
+for (var i=0;longList.length>i;i++) {
+  longList[i] = {
+    title:i,
+    paragraph:chance.paragraph()
+  }
+}
 
 const {
   CardStack:NavigationCardStack,
   StateUtils:NavigationStateUtils
 } = NavigationExperimental;
-
-const longList = new Array(100);
-
-for (var i=0;longList.length>i;i++) {
-  longList[i] = {
-    title:chance.word(),
-    paragraph:chance.paragraph()
-  }
-}
 
 class BleedingEdgeApplication extends Component {
   constructor(props,context){
@@ -83,14 +85,40 @@ class TappableRow extends Component {
 }
 
 class MyVeryComplexScene extends Component {
+
   constructor(props) {
     super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      dataSource: ds.cloneWithRows(longList)
+      dataSource: ds.cloneWithRows(longList),
+      loadingView: true
     };
   }
+
+  componentDidMount() {
+   InteractionManager.runAfterInteractions(() => {
+     this.setState({loadingView: false});
+   });
+  }
+
   render(){
+    if (this.state.loadingView) {
+     return (
+       <ScrollView style={styles.scrollView}>
+         <Text style={styles.row}>
+           Route: {this.props.route.key}
+         </Text>
+         <TappableRow
+           text='Tap me to load the next scene'
+           onPress={this.props.onPushRoute}
+         />
+         <TappableRow
+           text='Tap me to go back'
+           onPress={this.props.onPopRoute}
+         />
+       </ScrollView>
+     );
+    }
     return (
       <ScrollView style={styles.scrollView}>
         <Text style={styles.row}>
@@ -145,6 +173,7 @@ class MyVerySimpleNavigator extends Component {
         navigationState={this.props.navigationState}
         renderScene={this._renderScene}
         style={styles.navigator}
+        direction={"vertical"}
       />
     );
   }
@@ -172,4 +201,4 @@ const styles = StyleSheet.create({
   }
 });
 
-AppRegistry.registerComponent('Navigation',() => BleedingEdgeApplication);
+AppRegistry.registerComponent('Navigation',() => SimpleNav);
