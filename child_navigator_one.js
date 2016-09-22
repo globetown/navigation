@@ -10,6 +10,7 @@ var {
   TouchableHighlight,
   TouchableOpacity,
   ListView,
+  InteractionManager,
   View
 } = ReactNative;
 
@@ -22,6 +23,52 @@ for (var i=0;longList.length>i;i++) {
   longList[i] = {
     title:i,
     paragraph:chance.paragraph()
+  }
+}
+
+class Page extends React.Component {
+  constructor(props) {
+    super(props);
+    const ds = new ListView.DataSource({rowHasChanged: (r1,r2) => r1 !== r2});
+    this.state = {
+      dataSource:ds.cloneWithRows(longList),
+      loadingView:true
+    };
+  }
+  componentDidMount() {
+   InteractionManager.runAfterInteractions(() => {
+     this.setState({loadingView:false});
+   });
+  }
+  render(){
+    if (this.state.loadingView) {
+      return (<Text>Wait</Text>)
+    } else {
+      return (
+        <ScrollView style={styles.scene}>
+          <NavButton
+            onPress={() => {this.props.navigator.push(_getRandomRoute())}}
+            text="Push1"
+          />
+          <NavButton
+            onPress={() => {this.props.navigator.pop()}}
+            text="Pop"
+          />
+          <ListView
+            removeClippedSubviews={false}
+            dataSource={this.state.dataSource}
+            renderRow={(rowData) => {
+              return (
+                <View>
+                  <Text>{rowData.title}</Text>
+                  <Text>{rowData.paragraph}</Text>
+                </View>
+              )
+            }}
+          />
+        </ScrollView>
+      );
+    }
   }
 }
 
@@ -39,16 +86,6 @@ class NavButton extends React.Component {
 }
 
 class BreadcrumbNavSample extends React.Component {
-
-  constructor(props) {
-    super(props);
-    const ds = new ListView.DataSource({rowHasChanged: (r1,r2) => r1 !== r2});
-    this.state = {
-      dataSource: ds.cloneWithRows(longList),
-      loadingView: true
-    };
-  }
-
   componentWillMount(){
     this._navBarRouteMapper = {
       rightContentForRoute: function(route,navigator) {
@@ -65,7 +102,7 @@ class BreadcrumbNavSample extends React.Component {
       iconForRoute: function(route,navigator) {
         return (
           <TouchableOpacity
-            onPress={() => { navigator.popToRoute(route); }}
+            onPress={() => {navigator.popToRoute(route)}}
             style={styles.crumbIconPlaceholder}
           />
         );
@@ -83,28 +120,9 @@ class BreadcrumbNavSample extends React.Component {
 
   _renderScene = (route,navigator) => {
     return (
-      <ScrollView style={styles.scene}>
-        <NavButton
-          onPress={() => {navigator.push(_getRandomRoute())}}
-          text="Push1"
-        />
-        <NavButton
-          onPress={() => {navigator.pop()}}
-          text="Pop"
-        />
-        <ListView
-          removeClippedSubviews={false}
-          dataSource={this.state.dataSource}
-          renderRow={(rowData) => {
-            return (
-              <View>
-                <Text>{rowData.title}</Text>
-                <Text>{rowData.paragraph}</Text>
-              </View>
-            )
-          }}
-        />
-      </ScrollView>
+      <Page
+        navigator={navigator}
+      />
     );
   };
 
