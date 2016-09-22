@@ -83,7 +83,7 @@ class BreadcrumbNavSample extends React.Component {
 
   _renderScene = (route,navigator) => {
     return (
-      <View style={styles.scene}>
+      <ScrollView style={styles.scene}>
         <NavButton
           onPress={() => {navigator.push(_getRandomRoute())}}
           text="Push1"
@@ -93,8 +93,6 @@ class BreadcrumbNavSample extends React.Component {
           text="Pop"
         />
         <ListView
-          initialListSize={10}
-          pageSize={10}
           removeClippedSubviews={false}
           dataSource={this.state.dataSource}
           renderRow={(rowData) => {
@@ -106,7 +104,7 @@ class BreadcrumbNavSample extends React.Component {
             )
           }}
         />
-      </View>
+      </ScrollView>
     );
   };
 

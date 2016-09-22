@@ -93,9 +93,6 @@ class BreadcrumbNavSample extends React.Component {
           text="Pop"
         />
         <ListView
-          style={styles.list}
-          initialListSize={10}
-          pageSize={10}
           removeClippedSubviews={false}
           dataSource={this.state.dataSource}
           renderRow={(rowData) => {

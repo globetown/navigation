@@ -1,23 +1,3 @@
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * The examples provided by Facebook are for non-commercial testing and
- * evaluation purposes only.
- *
- * Facebook reserves all rights not expressly granted.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
- * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
 'use strict';
 
 var React = require('react');
@@ -51,23 +31,19 @@ class NavButton extends React.Component {
 }
 
 var ROUTE_STACK = [
-  {num:0},
-  {num:1},
-  {num:2},
+  {num:0}
 ];
 
-var INIT_ROUTE_INDEX = 1;
+var INIT_ROUTE_INDEX = 0;
 
 class JumpingNavBar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      tabIndex: props.initTabIndex,
-    };
+    this.state = {tabIndex:props.initTabIndex};
   }
   handleWillFocus(route) {
     var tabIndex = ROUTE_STACK.indexOf(route);
-    this.setState({ tabIndex });
+    this.setState({tabIndex});
   }
   render() {
     return (
@@ -78,7 +54,7 @@ class JumpingNavBar extends React.Component {
             selected={this.state.tabIndex === 0}
             onPress={() => {
               this.props.onTabIndex(0);
-              this.setState({ tabIndex: 0, });
+              this.setState({tabIndex:0});
             }}>
             <View />
           </TabBarIOS.Item>
@@ -87,7 +63,7 @@ class JumpingNavBar extends React.Component {
             selected={this.state.tabIndex === 1}
             onPress={() => {
               this.props.onTabIndex(1);
-              this.setState({ tabIndex: 1, });
+              this.setState({tabIndex:1});
             }}>
             <View />
           </TabBarIOS.Item>
@@ -96,7 +72,7 @@ class JumpingNavBar extends React.Component {
             selected={this.state.tabIndex === 2}
             onPress={() => {
               this.props.onTabIndex(2);
-              this.setState({ tabIndex: 2, });
+              this.setState({tabIndex:2});
             }}>
             <View />
           </TabBarIOS.Item>
@@ -136,25 +112,30 @@ class JumpingNavSample extends React.Component {
         })}
         navigationBar={
           <JumpingNavBar
-            ref={(navBar) => { this.navBar = navBar; }}
+            ref={(navBar) => {this.navBar = navBar}}
             initTabIndex={INIT_ROUTE_INDEX}
             routeStack={ROUTE_STACK}
             onTabIndex={(index) => {
-              this._navigator.jumpTo(ROUTE_STACK[index]);
+              if(this._navigator.state.routeStack.map(elm => elm.num).indexOf(index) === -1){
+                this._navigator.push({num:index});
+              } else {
+                this._navigator.jumpTo(this._navigator.state.routeStack[index]);
+              }
             }}
           />
         }
       />
     );
   }
-
-  renderScene = (route, navigator) => {
+  renderScene = (route,navigator) => {
     if(route.num === 0){
       return <ChildNavigatorZero />
     } else if(route.num === 1){
       return <ChildNavigatorOne />
-    } else {
+    } else if(route.num === 2) {
       return <ChildNavigatorTwo />
+    } else {
+      return;
     }
   };
 }
