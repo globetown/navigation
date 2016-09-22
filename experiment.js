@@ -9,20 +9,8 @@ const ReactNative = require('react-native');
  * an app with composite navigation system.
  */
 
-const {
-  Component,
-  PropTypes,
-} = React;
-
-const {
-  NavigationExperimental,
-  ScrollView,
-  StyleSheet,
-  Text,
-  ListView,
-  TouchableOpacity,
-  View,
-} = ReactNative;
+const {Component,PropTypes} = React;
+const {NavigationExperimental,ScrollView,StyleSheet,Text,ListView,TouchableOpacity,View} = ReactNative;
 
 const {
   CardStack: NavigationCardStack,

@@ -2,38 +2,22 @@
 
 var React = require('react');
 var ReactNative = require('react-native');
-var {
-  Navigator,
-  StyleSheet,
-  ScrollView,
-  Text,
-  TouchableHighlight,
-  TouchableOpacity,
-  ListView,
-  InteractionManager,
-  View
-} = ReactNative;
+var {Navigator,StyleSheet,ScrollView,Text,TouchableHighlight,TouchableOpacity,ListView,View,InteractionManager} = ReactNative;
 
 var _getRandomRoute = () => ({title:'#'+Math.ceil(Math.random()*1000)});
 
 var Chance = require('chance');
 var chance = new Chance();
-const longList = new Array(500);
+const longList = new Array(100);
 for (var i=0;longList.length>i;i++) {
-  longList[i] = {
-    title:i,
-    paragraph:chance.paragraph()
-  }
+  longList[i] = {title:i,paragraph:chance.paragraph()}
 }
 
 class Page extends React.Component {
   constructor(props) {
     super(props);
-    const ds = new ListView.DataSource({rowHasChanged: (r1,r2) => r1 !== r2});
-    this.state = {
-      dataSource:ds.cloneWithRows(longList),
-      loadingView:true
-    };
+    const ds = new ListView.DataSource({rowHasChanged:(r1,r2) => r1 !== r2});
+    this.state = {dataSource:ds.cloneWithRows(longList),loadingView:true};
   }
   componentDidMount() {
    InteractionManager.runAfterInteractions(() => {
@@ -42,7 +26,11 @@ class Page extends React.Component {
   }
   render(){
     if (this.state.loadingView) {
-      return (<Text>Wait</Text>)
+      return (
+        <View style={styles.palceHolder}>
+          <Text style={styles.loading}>Wait</Text>
+        </View>
+      )
     } else {
       return (
         <ScrollView style={styles.scene}>
@@ -143,6 +131,17 @@ class BreadcrumbNavSample extends React.Component {
 }
 
 var styles = StyleSheet.create({
+  palceHolder: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  loading: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
   scene: {
     paddingTop: 50,
     flex: 1,

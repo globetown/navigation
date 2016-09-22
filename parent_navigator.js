@@ -2,15 +2,7 @@
 
 var React = require('react');
 var ReactNative = require('react-native');
-var {
-  Navigator,
-  StyleSheet,
-  ScrollView,
-  TabBarIOS,
-  Text,
-  TouchableHighlight,
-  View,
-} = ReactNative;
+var {Navigator,StyleSheet,ScrollView,TabBarIOS,Text,TouchableHighlight,View} = ReactNative;
 
 import ChildNavigatorZero from './child_navigator_zero.js';
 import ChildNavigatorOne from './child_navigator_one.js';
@@ -30,10 +22,7 @@ class NavButton extends React.Component {
   }
 }
 
-var ROUTE_STACK = [
-  {num:0}
-];
-
+var ROUTE_STACK = [{num:0}];
 var INIT_ROUTE_INDEX = 0;
 
 class JumpingNavBar extends React.Component {
@@ -82,15 +71,9 @@ class JumpingNavBar extends React.Component {
   }
 }
 
-var NoTransition = {
-  opacity: {
-    value: 1.0,
-    type: 'constant',
-  }
-};
-
 class JumpingNavSample extends React.Component {
   render() {
+    console.log('this.props',this.props);
     return (
       <Navigator
         debugOverlay={false}
@@ -106,8 +89,8 @@ class JumpingNavSample extends React.Component {
           gestures: null,
           defaultTransitionVelocity: 1000,
           animationInterpolators: {
-            into: buildStyleInterpolator(NoTransition),
-            out: buildStyleInterpolator(NoTransition),
+            into: buildStyleInterpolator({opacity:{value:1.0,type:'constant'}}),
+            out: buildStyleInterpolator({opacity:{value:1.0,type:'constant'}}),
           },
         })}
         navigationBar={
