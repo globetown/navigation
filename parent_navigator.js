@@ -32,13 +32,10 @@ var {
   View,
 } = ReactNative;
 
+import ChildNavigatorZero from './child_navigator_zero.js';
+import ChildNavigatorOne from './child_navigator_one.js';
+import ChildNavigatorTwo from './child_navigator_two.js';
 var buildStyleInterpolator = require('buildStyleInterpolator');
-
-var _getRandomRoute = function() {
-  return {
-    randNumber: Math.ceil(Math.random() * 1000),
-  };
-};
 
 class NavButton extends React.Component {
   render() {
@@ -54,10 +51,11 @@ class NavButton extends React.Component {
 }
 
 var ROUTE_STACK = [
-  _getRandomRoute(),
-  _getRandomRoute(),
-  _getRandomRoute(),
+  {num:0},
+  {num:1},
+  {num:2},
 ];
+
 var INIT_ROUTE_INDEX = 1;
 
 class JumpingNavBar extends React.Component {
@@ -69,7 +67,7 @@ class JumpingNavBar extends React.Component {
   }
   handleWillFocus(route) {
     var tabIndex = ROUTE_STACK.indexOf(route);
-    this.setState({ tabIndex, });
+    this.setState({ tabIndex });
   }
   render() {
     return (
@@ -151,55 +149,13 @@ class JumpingNavSample extends React.Component {
   }
 
   renderScene = (route, navigator) => {
-    var backBtn;
-    var forwardBtn;
-    if (ROUTE_STACK.indexOf(route) !== 0) {
-      backBtn = (
-        <NavButton
-          onPress={() => {
-            navigator.jumpBack();
-          }}
-          text="jumpBack"
-        />
-      );
+    if(route.num === 0){
+      return <ChildNavigatorZero />
+    } else if(route.num === 1){
+      return <ChildNavigatorOne />
+    } else {
+      return <ChildNavigatorTwo />
     }
-    if (ROUTE_STACK.indexOf(route) !== ROUTE_STACK.length - 1) {
-      forwardBtn = (
-        <NavButton
-          onPress={() => {
-            navigator.jumpForward();
-          }}
-          text="jumpForward"
-        />
-      );
-    }
-    return (
-      <ScrollView style={styles.scene}>
-        <Text style={styles.messageText}>#{route.randNumber}</Text>
-        {backBtn}
-        {forwardBtn}
-        <NavButton
-          onPress={() => {
-            navigator.jumpTo(ROUTE_STACK[1]);
-          }}
-          text="jumpTo middle route"
-        />
-        <NavButton
-          onPress={() => {
-            this.props.navigator.pop();
-          }}
-          text="Exit Navigation Example"
-        />
-        <NavButton
-          onPress={() => {
-            this.props.navigator.push({
-              message: 'Came from jumping example',
-            });
-          }}
-          text="Nav Menu"
-        />
-      </ScrollView>
-    );
   };
 }
 
