@@ -99,6 +99,7 @@ class JumpingNavSample extends React.Component {
             initTabIndex={INIT_ROUTE_INDEX}
             routeStack={ROUTE_STACK}
             onTabIndex={(index) => {
+              this.props.action();
               if(this._navigator.state.routeStack.map(elm => elm.num).indexOf(index) === -1){
                 this._navigator.push({num:index});
               } else {

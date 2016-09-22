@@ -5,9 +5,7 @@ import {Provider,connect} from 'react-redux';
 import {createStore} from 'redux';
 import SimpleNav from './parent_navigator';
 
-const initialState = {
-  count:1
-};
+const initialState = {count:1};
 
 const reducer = (state,action) => {
   state = state || initialState;
@@ -29,13 +27,14 @@ const store = createStore(reducer);
 class Container extends React.Component {
   render(){
     return (
-      <SimpleNav/>
+      <SimpleNav {...this.props} />
     );
   }
 }
 
+const action = () => ({type:'INC'});
 const mapStateToProps = state => ({...state});
-const MyContainer = connect(mapStateToProps,{})(Container);
+const MyContainer = connect(mapStateToProps,{action})(Container);
 
 export default class App extends React.Component {
   render(){
