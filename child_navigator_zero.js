@@ -8,7 +8,7 @@ var _getRandomRoute = () => ({title:'#'+Math.ceil(Math.random()*1000)});
 
 var Chance = require('chance');
 var chance = new Chance();
-const longList = new Array(100);
+const longList = new Array(10);
 for (var i=0;longList.length>i;i++) {
   longList[i] = {title:i,paragraph:chance.paragraph()}
 }
@@ -145,6 +145,7 @@ var styles = StyleSheet.create({
   scene: {
     paddingTop: 50,
     flex: 1,
+    backgroundColor:'white'
   },
   button: {
     backgroundColor: 'white',
